@@ -45,13 +45,6 @@ void Widget::dropEvent(QDropEvent *e)
     ui->listWidget->setCurrentRow(index);
 }
 
-void Widget::on_toolButton_4_clicked()
-{
-    QString fileName = ui->listWidget->currentItem()->text();
-    qDebug() << fileName;
-    playFile(fileName);
-}
-
 void Widget::on_process_read_output()
 {
     QString out(qp->readAllStandardOutput());
@@ -157,6 +150,6 @@ void Widget::on_stopButton_clicked()
 void Widget::on_playButton_clicked()
 {
     int index = ui->listWidget->currentRow();
-    if (index > 0 && queue.length() < index)
+    if (index >= 0 && index < queue.length())
         playFile(queue.at(index));
 }

@@ -21,7 +21,6 @@ protected:
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
 private slots:
-    void on_toolButton_4_clicked();
     void on_process_read_output();
     void on_process_finished(int exitCode, QProcess::ExitStatus exitStatus);
     void on_listWidget_doubleClicked(const QModelIndex &index);
