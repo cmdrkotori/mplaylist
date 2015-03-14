@@ -1,7 +1,7 @@
 mplaylist
 =========
 
-A simple `mpv <https://github.com/mpv-player/mpv>` playlist manager
+A simple `mpv <https://github.com/mpv-player/mpv>`_ playlist manager
 written in Qt.  Literally written in about an hour.
 
 Instructions
