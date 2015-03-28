@@ -21,9 +21,9 @@ Window::Window(QWidget *parent) :
     ui(new Ui::Window)
 {
     ui->setupUi(this);
-    connect(&cfg, SIGNAL(playlistFound(QString,QStringList)), SLOT(config_playlistFound(QString,QStringList)));
-    connect(&cfg, SIGNAL(finishedEnumerating()), SLOT(config_finishedEnumerating()));
-    cfg.enumPlaylists();
+    connect(&store, SIGNAL(playlistFound(QString,QStringList)), SLOT(storage_playlistFound(QString,QStringList)));
+    connect(&store, SIGNAL(finishedEnumerating()), SLOT(storage_finishedEnumerating()));
+    store.enumPlaylists();
 }
 
 Window::~Window()
@@ -47,32 +47,32 @@ void Window::removePlaylist(int index)
         return;
 
     Widget *w = reinterpret_cast<Widget*>(ui->tabWidget->widget(index));
-    storage::cfgReturns ret = cfg.removePlaylist(w->getTitle());
-    if (ret != storage::crSuccess) {
+    storage::storeReturns ret = store.removePlaylist(w->getTitle());
+    if (ret != storage::srSuccess) {
         showFail(ret, w->getTitle());
         return;
     }
     ui->tabWidget->removeTab(index);
 }
 
-void Window::showFail(storage::cfgReturns why, const QString &name, const QString &fileName)
+void Window::showFail(storage::storeReturns why, const QString &name, const QString &fileName)
 {
-    if (why == storage::crAlreadyExists)
+    if (why == storage::srAlreadyExists)
         errorMessage(MSG_ALREADYEXISTS.arg(name));
-    if (why == storage::crWriteFailed) {
+    if (why == storage::srWriteFailed) {
         errorMessage(name.isEmpty()
                      ? MSG_UNEXPORTED.arg(name, fileName)
                      : MSG_UNWRITTEN.arg(name));
     }
-    if (why == storage::crNoLongerExists)
+    if (why == storage::srNoLongerExists)
         // ideally, we would tie a playlist to a file, and remove it when it
         // is tampered with by hooking into inotify.
         errorMessage(MSG_NONEXISTANT.arg(name));
-    if (why == storage::crRenameFailed)
+    if (why == storage::srRenameFailed)
         errorMessage(MSG_UNRENAMED.arg(name));
-    if (why == storage::crRemoveFailed)
+    if (why == storage::srRemoveFailed)
         errorMessage(MSG_STILLTHERE.arg(name));
-    if (why == storage::crReadFailed)
+    if (why == storage::srReadFailed)
         errorMessage(MSG_UNREAD.arg(fileName));
 
 }
@@ -82,12 +82,12 @@ void Window::errorMessage(const QString &message)
     QMessageBox::warning(this, tr("Something bad happened"), message);
 }
 
-void Window::config_playlistFound(const QString &name, const QStringList &entries)
+void Window::storage_playlistFound(const QString &name, const QStringList &entries)
 {
     addTab(name, entries);
 }
 
-void Window::config_finishedEnumerating()
+void Window::storage_finishedEnumerating()
 {
     if (ui->tabWidget->count() == 0) {
         on_addPlaylist_clicked();
@@ -96,8 +96,8 @@ void Window::config_finishedEnumerating()
 
 void Window::widget_playlistChanged(Widget *widget)
 {
-    storage::cfgReturns ret = cfg.updatePlaylist(widget->getTitle(), widget->getQueue());
-    if (ret != storage::crSuccess)
+    storage::storeReturns ret = store.updatePlaylist(widget->getTitle(), widget->getQueue());
+    if (ret != storage::srSuccess)
         showFail(ret, widget->getTitle());
 }
 
@@ -105,8 +105,8 @@ void Window::on_addPlaylist_clicked()
 {
     QString name = tr("empty playlist");
     QStringList queue;
-    storage::cfgReturns ret = cfg.addPlaylist(name, queue);
-    if (ret != storage::crSuccess) {
+    storage::storeReturns ret = store.addPlaylist(name, queue);
+    if (ret != storage::srSuccess) {
         showFail(ret, name);
         return;
     }
@@ -126,8 +126,8 @@ void Window::on_tabWidget_tabBarDoubleClicked(int index)
                                  QLineEdit::Normal, oldText , &ok);
     if (!ok || newText.isEmpty())
         return;
-    storage::cfgReturns ret = cfg.renamePlaylist(oldText, newText);
-    if (ret == storage::crSuccess) {
+    storage::storeReturns ret = store.renamePlaylist(oldText, newText);
+    if (ret == storage::srSuccess) {
         ui->tabWidget->setTabText(index, newText);
         reinterpret_cast<Widget*>(ui->tabWidget->currentWidget())->setTitle(newText);
         return;
@@ -155,8 +155,8 @@ void Window::on_importPlaylist_clicked()
         return;
 
     QStringList entries;
-    storage::cfgReturns ret = cfg.importPlaylist(fileName, title, entries);
-    if (ret != storage::crSuccess) {
+    storage::storeReturns ret = store.importPlaylist(fileName, title, entries);
+    if (ret != storage::srSuccess) {
         showFail(ret, title, fileName);
         return;
     }
@@ -176,7 +176,7 @@ void Window::on_exportPlaylist_clicked()
     if (fileName.isEmpty())
         return;
 
-    storage::cfgReturns ret = cfg.exportPlaylist(fileName, w->getQueue());
+    storage::storeReturns ret = store.exportPlaylist(fileName, w->getQueue());
     showFail(ret, w->getTitle(), fileName);
 }
 

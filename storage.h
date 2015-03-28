@@ -26,18 +26,18 @@ public:
     /* This is an absurd amount of error detection.  We could display error
      * dialogs from this class, but those belong in the ui/view classes.
      */
-    enum cfgReturns { crSuccess, crAlreadyExists, crNoLongerExists,
-                      crWriteFailed, crReadFailed, crRenameFailed,
-                      crRemoveFailed };
+    enum storeReturns { srSuccess, srAlreadyExists, srNoLongerExists,
+                        srWriteFailed, srReadFailed, srRenameFailed,
+                        srRemoveFailed };
 
-    cfgReturns addPlaylist(const QString &title, const QStringList &entries = QStringList());
-    cfgReturns renamePlaylist(const QString &oldTitle, const QString &newTitle);
-    cfgReturns removePlaylist(const QString &title);
+    storeReturns addPlaylist(const QString &title, const QStringList &entries = QStringList());
+    storeReturns renamePlaylist(const QString &oldTitle, const QString &newTitle);
+    storeReturns removePlaylist(const QString &title);
     // Note the use of the non-const parameter.  Instead of passing this back
     // on the stack, we modify what was passed to us.
-    cfgReturns importPlaylist(const QString &filePath, const QString &title, QStringList &entries);
-    cfgReturns exportPlaylist(const QString &filePath, const QStringList &entries);
-    cfgReturns updatePlaylist(const QString &title, const QStringList &entries);
+    storeReturns importPlaylist(const QString &filePath, const QString &title, QStringList &entries);
+    storeReturns exportPlaylist(const QString &filePath, const QStringList &entries);
+    storeReturns updatePlaylist(const QString &title, const QStringList &entries);
     void enumPlaylists();
 
 private:
@@ -60,7 +60,7 @@ private:
     QStringList entriesFromM3U(QStringList);
     QString playlistToPath(const QString &title);
     bool entriesFromPlaylist(const QString &filePath, QStringList &entries);
-    cfgReturns writeEntriesToFile(const QString &filePath, const QStringList &entries);
+    storeReturns writeEntriesToFile(const QString &filePath, const QStringList &entries);
     bool playlistAlreadyExists(const QString &title);
 
 signals:

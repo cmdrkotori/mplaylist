@@ -30,17 +30,17 @@ public:
 
 private:
     Ui::Window *ui;
-    storage cfg;
+    storage store;
     QString configPath;
 
     void addTab(const QString& title, const QStringList &queue = QStringList());
     void removePlaylist(int index);
-    void showFail(storage::cfgReturns why, const QString &name, const QString &fileName = 0);
+    void showFail(storage::storeReturns why, const QString &name, const QString &fileName = 0);
     void errorMessage(const QString &message);
 
 private slots:
-    void config_playlistFound(const QString &name, const QStringList& entries);
-    void config_finishedEnumerating();
+    void storage_playlistFound(const QString &name, const QStringList& entries);
+    void storage_finishedEnumerating();
     void widget_playlistChanged(Widget *widget);
 
     void on_addPlaylist_clicked();

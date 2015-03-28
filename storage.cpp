@@ -10,46 +10,46 @@ storage::storage(QObject *parent) :
     fetchConfigPath();
 }
 
-storage::cfgReturns storage::addPlaylist(const QString &title, const QStringList &entries)
+storage::storeReturns storage::addPlaylist(const QString &title, const QStringList &entries)
 {
     if (playlistAlreadyExists(title))
-        return crAlreadyExists;
+        return srAlreadyExists;
     return writeEntriesToFile(playlistToPath(title), entries);
 }
 
-storage::cfgReturns storage::renamePlaylist(const QString &oldTitle, const QString &newTitle)
+storage::storeReturns storage::renamePlaylist(const QString &oldTitle, const QString &newTitle)
 {
     QFile file(playlistToPath(oldTitle));
     if (!file.exists())
-        return crNoLongerExists;  // sneakily removed
+        return srNoLongerExists;  // sneakily removed
     if (!file.rename(playlistToPath(newTitle)))
-        return crRenameFailed;  // this is probably a filesystem/permission error
-    return crSuccess;
+        return srRenameFailed;  // this is probably a filesystem/permission error
+    return srSuccess;
 }
 
-storage::cfgReturns storage::removePlaylist(const QString &title)
+storage::storeReturns storage::removePlaylist(const QString &title)
 {
     QFile file(playlistToPath(title));
     if (!file.exists())
-        return crNoLongerExists;
+        return srNoLongerExists;
     if (!file.remove())
-        return crRemoveFailed;
-    return crSuccess;
+        return srRemoveFailed;
+    return srSuccess;
 }
 
-storage::cfgReturns storage::importPlaylist(const QString &filePath, const QString &title, QStringList &entries)
+storage::storeReturns storage::importPlaylist(const QString &filePath, const QString &title, QStringList &entries)
 {
     if (!entriesFromPlaylist(filePath, entries))
-        return crReadFailed;
+        return srReadFailed;
     return addPlaylist(title, entries);
 }
 
-storage::cfgReturns storage::exportPlaylist(const QString &filePath, const QStringList &entries)
+storage::storeReturns storage::exportPlaylist(const QString &filePath, const QStringList &entries)
 {
     return writeEntriesToFile(filePath, entries);
 }
 
-storage::cfgReturns storage::updatePlaylist(const QString &title, const QStringList &entries)
+storage::storeReturns storage::updatePlaylist(const QString &title, const QStringList &entries)
 {
     return writeEntriesToFile(playlistToPath(title), entries);
 }
@@ -87,15 +87,15 @@ bool storage::entriesFromPlaylist(const QString &filePath, QStringList &entries)
     return true;
 }
 
-storage::cfgReturns storage::writeEntriesToFile(const QString &filePath, const QStringList &entries)
+storage::storeReturns storage::writeEntriesToFile(const QString &filePath, const QStringList &entries)
 {
     QFile file(filePath);
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
-        return crWriteFailed;
+        return srWriteFailed;
     file.resize(0);
     QTextStream qts(&file);
     qts << entriesToM3U(entries).join('\n');
-    return crSuccess;
+    return srSuccess;
 }
 
 bool storage::playlistAlreadyExists(const QString &title)
