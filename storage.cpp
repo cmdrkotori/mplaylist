@@ -62,10 +62,10 @@ void storage::enumPlaylists()
     while (it.hasNext()) {
         it.next();
         info = it.fileInfo();
-        if (info.completeSuffix() != "m3u")
+        if (info.suffix() != "m3u")
             continue;
         if (entriesFromPlaylist(info.absoluteFilePath(), entries))
-            emit playlistFound(info.baseName(), entries);
+            emit playlistFound(info.completeBaseName(), entries);
     }
     emit finishedEnumerating();
 }
