@@ -13,11 +13,20 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        widget.cpp
+        widget.cpp \
+    window.cpp \
+    storage.cpp
 
-HEADERS  += widget.h
+HEADERS  += widget.h \
+    window.h \
+    storage.h
 
-FORMS    += widget.ui
+FORMS    += widget.ui \
+    window.ui
 
 RESOURCES += \
     resources.qrc
+
+OTHER_FILES += \
+    README.rst \
+    LICENSE
