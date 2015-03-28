@@ -3,12 +3,11 @@
 
 #include <QWidget>
 #include <QDropEvent>
-#include <QProcess>
+#include "player.h"
 
-/* This class keeps track of its own mpv process and tracks a single
- * playlist.  We use a state-based approach to program exit, to determine
- * what to do next.  A way to improve the situation is to spin off the mpv
- * code to a player module.  But hey it works and literally who cares?
+/* This class keeps track of its own player and tracks a single playlist.  We
+ * use an event-based approach to process playback.  Instead of marking files
+ * as 'read', we remove them from the list when they are fully played.
  */
 
 namespace Ui {
@@ -35,9 +34,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
 private slots:
-    void process_read_output();
-    void process_finished(int exitCode, QProcess::ExitStatus exitStatus);
-
+    void player_playbackFinished(const QString &fileJustPlayed);
     void on_listWidget_doubleClicked(const QModelIndex &index);
     void on_moveUpButton_clicked();
     void on_moveDownButton_clicked();
@@ -49,17 +46,11 @@ private slots:
 private:
     int exitState;
     Ui::Widget *ui;
-    QProcess* qp;
-    QString playingFile;
+    player p;
     QString title;
     QStringList queue;
 
-    void playFile(QString fileName);
-    void stopFile();
-    void removeItemAndPlayNext();
     void repopulateList(bool preserveSelection = true);
-    void checkFiles(QStringList &list);
-    bool checkFile(QString fileName);
 };
 
 #endif // WIDGET_H

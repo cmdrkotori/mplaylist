@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         widget.cpp \
     window.cpp \
-    storage.cpp
+    storage.cpp \
+    player.cpp
 
 HEADERS  += widget.h \
     window.h \
-    storage.h
+    storage.h \
+    player.h
 
 FORMS    += widget.ui \
     window.ui
