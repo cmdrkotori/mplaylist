@@ -107,6 +107,5 @@ void player::process_finished(int exitCode, QProcess::ExitStatus exitStatus)
         emit playbackNonstart(playingFile);
         break;
     }
-    playingFile.clear();
 }
 
