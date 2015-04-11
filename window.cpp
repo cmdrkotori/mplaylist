@@ -189,3 +189,8 @@ void Window::on_tabWidget_tabCloseRequested(int index)
 {
     removePlaylist(index);
 }
+
+void Window::on_renameButton_clicked()
+{
+    on_tabWidget_tabBarDoubleClicked(ui->tabWidget->currentIndex());
+}

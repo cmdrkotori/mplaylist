@@ -52,6 +52,7 @@ private slots:
     void on_tabWidget_tabCloseRequested(int index);
 
 
+    void on_renameButton_clicked();
 };
 
 #endif // WINDOW_H
