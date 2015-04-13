@@ -15,6 +15,7 @@
  *
  * Our objects are simply m3u playlists stored in the application's config
  * directory.  The title of each playlist in the gui is the name of each file.
+ * We do store the tab order in an ini file and attempt to restore it, however.
  */
 
 class storage : public QObject
@@ -39,6 +40,7 @@ public:
     storeReturns exportPlaylist(const QString &filePath, const QStringList &entries);
     storeReturns updatePlaylist(const QString &title, const QStringList &entries);
     void enumPlaylists();
+    void saveTabs(const QStringList &tabs);
 
 private:
     /* Literally the only reason why this is a class and not a bunch of static
@@ -62,6 +64,13 @@ private:
     bool entriesFromPlaylist(const QString &filePath, QStringList &entries);
     storeReturns writeEntriesToFile(const QString &filePath, const QStringList &entries);
     bool playlistAlreadyExists(const QString &title);
+
+    /* Because QSettings sorts string lists upon read, we need our own storage
+     * functions for this.
+     */
+    QStringList readTabs();
+    void writeTabs(const QStringList &tabs);
+
 
 signals:
     void playlistFound(const QString &name, const QStringList& entries);

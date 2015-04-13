@@ -21,6 +21,7 @@ Window::Window(QWidget *parent) :
     ui(new Ui::Window)
 {
     ui->setupUi(this);
+    connect(ui->tabWidget->tabBar(), SIGNAL(tabMoved(int,int)), SLOT(tabWidget_tabBar_moved()));
     connect(&store, SIGNAL(playlistFound(QString,QStringList)), SLOT(storage_playlistFound(QString,QStringList)));
     connect(&store, SIGNAL(finishedEnumerating()), SLOT(storage_finishedEnumerating()));
     store.enumPlaylists();
@@ -53,6 +54,18 @@ void Window::removePlaylist(int index)
         return;
     }
     ui->tabWidget->removeTab(index);
+    saveTabOrder();
+}
+
+void Window::saveTabOrder()
+{
+    QStringList tabs;
+    QTabBar* tb = ui->tabWidget->tabBar();
+    if (tb)
+        for (int i = 0; i < tb->count(); i++) {
+            tabs.append(tb->tabText(i));
+        }
+    store.saveTabs(tabs);
 }
 
 void Window::showFail(storage::storeReturns why, const QString &name, const QString &fileName)
@@ -111,6 +124,7 @@ void Window::on_addPlaylist_clicked()
         return;
     }
     addTab(name, queue);
+    saveTabOrder();
 }
 
 void Window::on_tabWidget_tabBarDoubleClicked(int index)
@@ -188,6 +202,11 @@ void Window::on_buttonBox_rejected()
 void Window::on_tabWidget_tabCloseRequested(int index)
 {
     removePlaylist(index);
+}
+
+void Window::tabWidget_tabBar_moved()
+{
+    saveTabOrder();
 }
 
 void Window::on_renameButton_clicked()

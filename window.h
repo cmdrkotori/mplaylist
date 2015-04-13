@@ -35,8 +35,10 @@ private:
 
     void addTab(const QString& title, const QStringList &queue = QStringList());
     void removePlaylist(int index);
+    void saveTabOrder();
     void showFail(storage::storeReturns why, const QString &name, const QString &fileName = 0);
     void errorMessage(const QString &message);
+
 
 private slots:
     void storage_playlistFound(const QString &name, const QStringList& entries);
@@ -50,7 +52,7 @@ private slots:
     void on_exportPlaylist_clicked();
     void on_buttonBox_rejected();
     void on_tabWidget_tabCloseRequested(int index);
-
+    void tabWidget_tabBar_moved();
 
     void on_renameButton_clicked();
 };

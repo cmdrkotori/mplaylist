@@ -4,6 +4,10 @@
 #include <QTextStream>
 #include <QDirIterator>
 
+
+static const QString TAB_FILE("tabs.txt");
+
+
 storage::storage(QObject *parent) :
     QObject(parent)
 {
@@ -56,23 +60,35 @@ storage::storeReturns storage::updatePlaylist(const QString &title, const QStrin
 
 void storage::enumPlaylists()
 {
+    // We start with two lists: whats on the disk and the tab order from last
+    // time.  So we merge the two, and load whatever playlists we can find.
+    QStringList allLists;
+    QStringList savedLists = readTabs();
+    foreach (const QString &s, savedLists) {
+        allLists.append(s + ".m3u");
+    }
+    QStringList storedLists = QDir(configPath).entryList(QStringList() << "*.m3u");
+    allLists.append(storedLists);
+    allLists.removeDuplicates();
+
+    QDir configDir(configPath);
     QFileInfo info;
-    QDirIterator it(configPath, QDir::Files);
     QStringList entries;
-    while (it.hasNext()) {
-        it.next();
-        info = it.fileInfo();
-        if (info.suffix() != "m3u")
-            continue;
+    foreach (const QString &s, allLists) {
+        info.setFile(configDir.filePath(s));
         if (entriesFromPlaylist(info.absoluteFilePath(), entries))
             emit playlistFound(info.completeBaseName(), entries);
     }
     emit finishedEnumerating();
 }
 
+void storage::saveTabs(const QStringList &tabs)
+{
+    writeTabs(tabs);
+}
+
 void storage::fetchConfigPath()
 {
-    QSettings::setDefaultFormat(QSettings::IniFormat);
     configPath = QFileInfo(QSettings().fileName()).absolutePath() + "/";
     QDir().mkpath(configPath);
 }
@@ -102,6 +118,22 @@ bool storage::playlistAlreadyExists(const QString &title)
 {
     QFileInfo info(playlistToPath(title));
     return info.exists();
+}
+
+QStringList storage::readTabs()
+{
+    QFile file(QDir(configPath).absoluteFilePath(TAB_FILE));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return QStringList();
+    return QTextStream(&file).readAll().split('\n');
+}
+
+void storage::writeTabs(const QStringList &tabs)
+{
+    QFile file(QDir(configPath).absoluteFilePath(TAB_FILE));
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
+    QTextStream(&file) << tabs.join('\n');
 }
 
 QStringList storage::entriesToM3U(const QStringList &entries)
