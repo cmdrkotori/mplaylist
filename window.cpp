@@ -149,11 +149,13 @@ void Window::on_tabWidget_tabBarDoubleClicked(int index)
     if (!ok || newText.isEmpty())
         return;
     storage::storeReturns ret = store.renamePlaylist(oldText, newText);
-    if (ret == storage::srSuccess) {
-        ui->tabWidget->setTabText(index, newText);
-        reinterpret_cast<Widget*>(ui->tabWidget->currentWidget())->setTitle(newText);
+    if (ret != storage::srSuccess) {
+        showFail(ret, oldText);
         return;
     }
+    ui->tabWidget->setTabText(index, newText);
+    reinterpret_cast<Widget*>(ui->tabWidget->currentWidget())->setTitle(newText);
+    return;
 }
 
 void Window::on_removePlaylist_clicked()
