@@ -155,7 +155,6 @@ void Window::on_tabWidget_tabBarDoubleClicked(int index)
     }
     ui->tabWidget->setTabText(index, newText);
     reinterpret_cast<Widget*>(ui->tabWidget->currentWidget())->setTitle(newText);
-    return;
 }
 
 void Window::on_removePlaylist_clicked()
