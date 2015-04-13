@@ -54,6 +54,12 @@ void Widget::dragEnterEvent(QDragEnterEvent *e)
 
 void Widget::dropEvent(QDropEvent *e)
 {
+    // Because repopulating a list is relatively expensive, (we do things very
+    // simply if we at all can,) we only update our gui if we really need to.
+    // Though not really, average use-cases aren't expensive unless you're
+    // dropping a copious amount of files all at once.  However, now we are
+    // checking if a file is valid, so this isn't so quick anymore.  If I get
+    // complaints about freezes, I'll spin this into a thread.
     bool changed = false;
     foreach (const QUrl &url, e->mimeData()->urls()) {
         const QString &fileName = url.toLocalFile();
@@ -70,6 +76,11 @@ void Widget::dropEvent(QDropEvent *e)
 
 void Widget::player_playbackFinished(const QString &fileJustPlayed)
 {
+    // When playback is finished, the item is removed and playback proceeds
+    // on the next item, if there is one.  I don't want to store positions at
+    // present, it would unduly complicate the simple storage mechanism all
+    // for the purpose of storing one index into a playlist.  Playlists may
+    // change when the program isn't running anyway, so don't bother.
     int index = ui->listWidget->currentRow();
     queue.removeAll(fileJustPlayed);
     repopulateList();
@@ -80,6 +91,10 @@ void Widget::player_playbackFinished(const QString &fileJustPlayed)
 
 void Widget::repopulateList(bool preserveSelection)
 {
+    // I am not using a bunch of model-view classes just to do this "more
+    // correctly" -- that would complicate the code and imo head towards
+    // unreadable spaghetti territory.  Instead, we simply reload the list
+    // widget whenever the queue changes.
     int index;
     if (preserveSelection)
         index = ui->listWidget->currentRow();
@@ -121,7 +136,7 @@ void Widget::on_moveDownButton_clicked()
 void Widget::on_removeButton_clicked()
 {
     int index = ui->listWidget->currentRow();
-    if (index < queue.length()) { // this is probably always true...
+    if (index < queue.length()) { // this is probably always true, except when it's not.
         queue.removeAt(index);
         repopulateList();
         emit playlistChanged(this);

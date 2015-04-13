@@ -25,7 +25,7 @@ storage::storeReturns storage::renamePlaylist(const QString &oldTitle, const QSt
 {
     QFile file(playlistToPath(oldTitle));
     if (!file.exists())
-        return srNoLongerExists;  // sneakily removed
+        return srNoLongerExists;  // sneakily removed by the user.  bad user!
     if (!file.rename(playlistToPath(newTitle)))
         return srRenameFailed;  // this is probably a filesystem/permission error
     return srSuccess;

@@ -59,6 +59,11 @@ void Window::removePlaylist(int index)
 
 void Window::saveTabOrder()
 {
+    // While it is possible to maintain a private string list of what tabs are
+    // where simply out to speed concerns, (why?) this can lead to bugs where
+    // the model does not reflect the view.  So instead we rescan the tabs to
+    // make sure that we are really saving the tab order, and not some
+    // fictional thing.
     QStringList tabs;
     QTabBar* tb = ui->tabWidget->tabBar();
     if (tb)
@@ -129,8 +134,11 @@ void Window::on_addPlaylist_clicked()
 
 void Window::on_tabWidget_tabBarDoubleClicked(int index)
 {
+    // If the tab bar sent us events for clicking the blank spaces, we would
+    // be adding a playlist here instead.
     if (index < 0) {
         on_addPlaylist_clicked();
+        return;
     }
 
     QString oldText = ui->tabWidget->tabText(index);

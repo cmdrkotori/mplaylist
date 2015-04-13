@@ -15,7 +15,8 @@
  *
  * Our objects are simply m3u playlists stored in the application's config
  * directory.  The title of each playlist in the gui is the name of each file.
- * We do store the tab order in an ini file and attempt to restore it, however.
+ * We do store the tab order in an text file and attempt to restore it,
+ * however.
  */
 
 class storage : public QObject
