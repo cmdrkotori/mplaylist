@@ -89,6 +89,7 @@ void storage::saveTabs(const QStringList &tabs)
 
 void storage::fetchConfigPath()
 {
+    QSettings::setDefaultFormat(QSettings::IniFormat);
     configPath = QFileInfo(QSettings().fileName()).absolutePath() + "/";
     QDir().mkpath(configPath);
 }
