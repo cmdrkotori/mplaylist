@@ -21,6 +21,9 @@ open a console and type the following commands:
     
     qtcreator mplaylist.pro
 
+To compile, click 'configure project' using the default settings and press the
+arrow button in the bottom left corner of the window.
+
 After this the binary should be at ~/src/mplaylist/build.../mplaylist.  Pin that
 to your taskbar, create a menu entry, place it on your desktop, or run from the
 commandline.
