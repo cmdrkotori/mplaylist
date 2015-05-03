@@ -8,13 +8,22 @@ written in Qt.
 Instructions
 ============
 
-You probably want to create a directory somewhere and check this out there.
+You probably want to create a directory somewhere and check this out there. i.e.
+open a console and type the following commands:
+
+    mkdir -p ~/src/mplaylist
+    
+    cd ~/src/mplaylist
 
     git clone https://github.com/cmdrkotori/mplaylist.git
     
     cd mplaylist
     
     qtcreator mplaylist.pro
+
+After this the binary should be at ~/src/mplaylist/build.../mplaylist.  Pin that
+to your taskbar, create a menu entry, place it on your desktop, or run from the
+commandline.
 
 The application calls mpv to play files, so Windows users please make sure the
 binaries are in the same directory or mpv is in your path.  You may want to
