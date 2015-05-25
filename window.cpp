@@ -8,7 +8,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-static const QString MSG_ALREADYEXISTS(QObject::tr("Playlist %1 already exists"));
+static const QString MSG_ALREADYEXISTS(QObject::tr("Playlist \"%1\" already exists.\nRename existing playlist?"));
 static const QString MSG_STILLTHERE(QObject::tr("Playlist %1 could not be removed"));
 static const QString MSG_UNWRITTEN(QObject::tr("Playlist %1 could not be written"));
 static const QString MSG_UNRENAMED(QObject::tr("Playlist %1 could not be renamed"));
