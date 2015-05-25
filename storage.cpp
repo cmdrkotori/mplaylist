@@ -4,7 +4,6 @@
 #include <QTextStream>
 #include <QDirIterator>
 
-
 static const QString TAB_FILE("tabs.txt");
 
 
