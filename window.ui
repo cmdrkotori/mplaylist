@@ -36,10 +36,10 @@
      <item>
       <widget class="QPushButton" name="addPlaylist">
        <property name="toolTip">
-        <string>Add an empty playlist</string>
+        <string>Create an empty playlist</string>
        </property>
        <property name="text">
-        <string>Add</string>
+        <string>New</string>
        </property>
       </widget>
      </item>
